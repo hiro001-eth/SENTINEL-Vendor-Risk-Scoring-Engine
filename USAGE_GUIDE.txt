@@ -1,0 +1,131 @@
+SENTINEL Vendor Risk Scoring Engine – Full Usage Guide (USAGE_GUIDE.txt)
+=======================================================================
+
+1. WHAT IS SENTINEL?
+---------------------
+SENTINEL is an open‑source, enterprise‑grade Vendor Risk Scoring Engine.  It scores third‑party vendors on security, compliance and financial exposure using:
+* Deterministic, YAML‑driven scoring logic (no black‑box AI).
+* Cryptographic SHA‑256 lineage for every run – audit‑traceable.
+* Real‑time external intelligence (BitSight, HaveIBeenPunched, SecurityScorecard).
+* FAIR financial risk quantification (Annual Loss Expectancy in USD).
+* Cross‑framework compliance mapping (SOC 2, ISO 27001, NIST CSF, PCI‑DSS).
+* Immediate Slack/Teams webhook alerts for high‑risk findings.
+
+2. QUICK START – LOCAL DEVELOPMENT
+-----------------------------------
+```
+# Clone the repo
+git clone https://github.com/yourorg/sentinel-vendor-risk-engine.git
+cd sentinel-vendor-risk-engine
+
+# Install dependencies (editable mode for dev)
+python -m pip install -e .[dev,test]
+
+# Prepare config (copy template and edit)
+cp .env.example .env
+# Edit .env – add API keys, optionally webhook URL
+
+# Run a single assessment (CSV input)
+sentinel score ./data/sample_responses.csv
+
+# View the generated PDF reports and audit log
+ls output/   # contains *.pdf, audit/*.jsonl, assessment_results.csv
+```
+The command creates a unique run ID (e.g. `SENTINEL-20260619-01A2B3C4`) and stores all artefacts under `./output/`.
+
+3. DOCKER‑BASED PRODUCTION DEPLOYMENT
+--------------------------------------
+```
+# Build and launch (one command)
+docker compose up --build -d
+
+# API endpoints are now reachable at:
+#   http://localhost:8000          – Web dashboard (Glassmorphism UI)
+#   http://localhost:8000/docs     – Swagger/OpenAPI explorer
+#   http://localhost:8000/health   – Health & metrics
+```
+The Docker image runs as a non‑root user, mounts `./output` as a volume, and includes a health‑check that restarts the container if the API crashes.
+
+4. REST API – Core Endpoints (summary)
+--------------------------------------
+| METHOD | PATH                                   | Description |
+|--------|----------------------------------------|-------------|
+| GET    | `/`                                    | Interactive GRC Dashboard UI |
+| GET    | `/health`                               | Liveness & readiness probe |
+| GET    | `/assessments/`                         | List all historic assessment runs |
+| POST   | `/assessments/` (multipart CSV upload) | Run a new assessment, returns run metadata |
+| GET    | `/assessments/{run_id}`                | Detailed audit log for a run |
+| GET    | `/assessments/{run_id}/executive-summary` | Board‑ready JSON summary – posture, FAIR exposure, top‑5 remediation recommendations |
+| GET    | `/assessments/{run_id}/compliance-map` | Cross‑framework control coverage matrix |
+| GET    | `/assessments/{run_id}/vendors/{vendor_id}/report` | Download PDF/A report for a specific vendor |
+
+5. WEBHOOK ALERTS – TURNING ON REAL‑TIME NOTIFICATIONS
+---------------------------------------------------
+Add the following lines to `.env` and restart the service (or re‑run the CLI):
+```
+WEBHOOK_URL=https://your-webhook-domain.com/services/TXXXXX/BXXXXX/XXXXX
+WEBHOOK_PROVIDER=slack   # options: slack, teams, generic
+```
+SENTINEL will automatically fire three types of alerts:
+* **High‑Risk Vendor** – includes vendor name, score, FAIR ALE (USD) and a direct link to the PDF.
+* **Category Floor Violation** – policy‑blocking condition detected.
+* **Pipeline Completion** – summary of total vendors, total gaps, and overall financial exposure.
+
+6. ADVANCED ENTERPRISE FEATURES
+--------------------------------
+### 6.1 FAIR Financial Risk Modeling
+* SENTINEL computes **Annual Loss Expectancy (ALE)** in USD based on asset value, likelihood and impact factors supplied in the questionnaire.
+* The ALE appears in the executive summary and in webhook payloads, giving C‑suite executives a dollar‑value view of risk.
+
+### 6.2 Cross‑Framework Compliance Mapping
+* Every failed control is automatically mapped to equivalent controls in SOC 2, ISO 27001, NIST CSF and PCI‑DSS.
+* The `/compliance-map` endpoint returns a JSON matrix that can be fed into a GRC dashboard (e.g., ServiceNow, Jira, or a custom PowerBI report).
+
+### 6.3 Trend Analysis & Remediation Tracker
+* `AdvancedGRCAnalyzer` stores each run’s scores and gaps.  Using the API you can request historic trends (`/assessments/{run_id}/trend`) – ideal for quarterly risk‑posture dashboards.
+* The `remediation_tracker` module (included under `src/vendor_risk_engine/scoring/`) can create tickets automatically via the webhook payload (Teams actionable cards) when a vendor exceeds a risk threshold.
+
+7. HOW COMPANIES WILL EXTRACT VALUE (Business ROI)
+---------------------------------------------------
+| Benefit | Why It Matters | Example ROI |
+|---------|----------------|------------|
+| Zero Licensing Cost | Replace $30‑$150K / yr SaaS tools with a free, self‑hosted stack. | Immediate 100% cost saving.
+| Audit‑Ready Lineage | Cryptographic hash proves that the score was produced from a known questionnaire and weight set. | Pass internal SOX or external audit without additional tooling.
+| Real‑Time Alerts | Slack/Teams notifications cut remediation time from days to hours. | Faster contract renegotiation, lower breach cost.
+| FAIR Exposure | Dollar‑value risk allows CFOs to allocate mitigation budget proportionally. | Prioritise top‑5 high‑ALE vendors, reduce expected loss.
+| Cross‑Framework Mapping | One engine covers multiple compliance regimes – reduces duplicate assessment work. | Consolidate SOC 2, ISO 27001, NIST CSF audits.
+
+8. PLAYGROUND – NON‑IT USERS CAN TEST
+--------------------------------------
+Even if you are not a developer, you can experiment with SENTINEL using the **Playground UI**:
+1. Open a web browser to `http://localhost:8000` (or Docker URL).
+2. Click **“Upload CSV”** – select the sample CSV under `data/`.
+3. Press **Run Assessment** – the UI shows a progress spinner and then displays a summary table.
+4. Click any vendor row to download its PDF report and view the computed ALE.
+5. The **“Executive Summary”** tab presents a plain‑English risk narrative you can copy‑paste into a slide deck.
+
+**Tips for non‑technical testing:**
+* Use the sample CSV unchanged – it already contains a low‑risk, a medium‑risk and a high‑risk vendor.
+* Observe the Slack notification (if you added a webhook) – it will pop up in your Slack channel.
+* Open the JSON output under `output/audit/` with any text editor – you will see structured events with timestamps and run IDs.
+
+9. BEST PRACTICES FOR SCALING TO ENTERPRISE
+-----------------------------------------
+1. **Version‑control weights** – keep `weight_config.yaml` in Git; any change triggers a new weight version and automatic rollback capability.
+2. **CI/CD pipeline** – run `sentinel validate` in a GitHub Actions workflow on every PR to guarantee schema correctness before merge.
+3. **Secure secrets** – store API keys and webhook URLs in a secrets manager (AWS Secrets Manager, HashiCorp Vault) and inject them into the container at runtime.
+4. **Horizontal scaling** – run multiple API containers behind a load balancer; each instance uses the same shared `output/` volume (or S3 bucket) for audit logs.
+5. **Monitoring** – integrate `/health` with Prometheus; export custom metrics (`sentinel_assessment_duration_seconds`, `sentinel_high_risk_count`).
+6. **Data retention policy** – purge audit logs older than 12 months via a cron job to stay GDPR‑compliant.
+
+10. TROUBLESHOOTING QUICK REFERENCE
+----------------------------------
+| Symptom | Likely Cause | Fix |
+|---------|--------------|-----|
+| No webhook delivered | `WEBHOOK_URL` missing or wrong scheme | Verify URL, ensure container can reach the internet, check network ACLs |
+| Scores all 0 | Weight config not loaded | Run `sentinel validate` – it will report missing weight file |
+| API returns 500 | Unhandled exception in external API | Set `EXTERNAL_DATA_TTL_HOURS=0` to disable external calls, then re‑run |
+| PDF not generated | `REPORT_FONT_PATH` points to missing font file | Ensure `assets/fonts/` contains the referenced .ttf/ .otf files |
+
+---
+End of USAGE_GUIDE.txt – keep this file version‑controlled alongside the code so new contributors and corporate security teams have a single source of truth.

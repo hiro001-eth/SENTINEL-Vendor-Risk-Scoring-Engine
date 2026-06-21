@@ -1,0 +1,53 @@
+version: "1.0.0"
+categories:
+  - category_id: "CAT_ISO_ORGANIZATIONAL"
+    category_name: "ISO 27001:2022 Organizational Controls (A.5)"
+    category_weight: 0.40
+    questions:
+      - question_id: "ISO_ORG_01"
+        question_text: "Does the organization maintain an active information security policy?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: false
+      - question_id: "ISO_ORG_02"
+        question_text: "Is there an inventory of assets and assigned ownership?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_ISO_PEOPLE"
+    category_name: "ISO 27001:2022 People Controls (A.6)"
+    category_weight: 0.20
+    questions:
+      - question_id: "ISO_PPL_01"
+        question_text: "Are background checks conducted for all incoming employees?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_ISO_PHYSICAL"
+    category_name: "ISO 27001:2022 Physical Controls (A.7)"
+    category_weight: 0.10
+    questions:
+      - question_id: "ISO_PHY_01"
+        question_text: "Are physical entry controls implemented at data centers/offices?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: false
+  - category_id: "CAT_ISO_TECHNICAL"
+    category_name: "ISO 27001:2022 Technological Controls (A.8)"
+    category_weight: 0.30
+    questions:
+      - question_id: "ISO_TECH_01"
+        question_text: "Are privileged access rights restricted and reviewed regularly?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true

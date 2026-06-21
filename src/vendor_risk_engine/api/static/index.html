@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTINEL GRC - Cyber Risk Control Center</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f9fafb; color: #111827; }
+        
+        .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .btn-gradient {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(124, 58, 237, 0.5);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-gray-900 font-sans min-h-screen">
+    
+    <!-- Top Nav -->
+    <header class="border-b border-gray-200 bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-gray-900">SENTINEL GRC</h1>
+                <p class="text-xs text-gray-500 font-medium mt-0.5">Deterministic Cyber Risk Control Center</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Top Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="card p-6 rounded-2xl">
+                <p class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-1">Assessment Runs</p>
+                <h3 id="stat-runs" class="text-3xl font-bold font-title text-gray-900">0</h3>
+                <p class="text-xs text-blue-700 mt-2 font-medium">Historical executions</p>
+            </div>
+            <div class="card p-6 rounded-2xl">
+                <p class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-1">Vendors Scored</p>
+                <h3 id="stat-vendors" class="text-3xl font-bold font-title text-gray-900">0</h3>
+                <p class="text-xs text-gray-600 mt-2 font-medium">Active vendors in database</p>
+            </div>
+            <div class="card p-6 rounded-2xl">
+                <p class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-1">Gaps Identified</p>
+                <h3 id="stat-gaps" class="text-3xl font-bold font-title text-gray-900">0</h3>
+                <p class="text-xs text-red-600 mt-2 font-medium">Control failures mapped</p>
+            </div>
+            <div class="card p-6 rounded-2xl">
+                <p class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-1">External Integrations</p>
+                <h3 class="text-3xl font-bold font-title text-gray-900">3 / 3</h3>
+                <p class="text-xs text-gray-600 mt-2 font-medium">BitSight, SSC, HIBP enabled</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Panel: Runs and Uploader -->
+            <div class="lg:col-span-1 space-y-8">
+                
+                <!-- Uploader -->
+                <div class="card p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold font-title mb-4 flex items-center gap-2">
+                        <svg class="h-5 w-5 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        Upload Assessment
+                    </h3>
+                    
+                    <div id="dropzone" class="border-2 border-dashed border-black/10 hover:border-gray-300 rounded-xl p-8 text-center cursor-pointer transition-all bg-white/40">
+                        <input type="file" id="file-input" class="hidden" accept=".csv">
+                        <p class="text-sm text-gray-900 mb-2">Drag & drop questionnaire CSV here</p>
+                        <p class="text-xs text-gray-900">or click to browse local files</p>
+                    </div>
+                    
+                    <div id="upload-status" class="mt-4 hidden text-sm font-semibold"></div>
+                </div>
+
+                <!-- Run History List -->
+                <div class="card p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold font-title mb-4">Run Executions</h3>
+                    <div id="runs-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                        <!-- Loaded dynamically -->
+                        <p class="text-sm text-gray-900">Loading runs...</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Panel: Run Details -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <div id="run-details-card" class="card p-8 rounded-2xl hidden">
+                    
+                    <div class="flex items-start justify-between border-b border-black/10 pb-6 mb-6">
+                        <div>
+                            <span class="text-xs font-bold text-gray-900 uppercase tracking-widest">Assessment Run Details</span>
+                            <h2 id="detail-run-id" class="text-xl font-bold font-title text-gray-900 mt-1">SENTINEL-XXXX</h2>
+                            <p id="detail-run-date" class="text-xs text-gray-900 mt-1"></p>
+                        </div>
+                        <div class="text-right">
+                            <span id="detail-run-status" class="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700 border border-gray-300"></span>
+                        </div>
+                    </div>
+
+                    <!-- Scored Vendors list in this Run -->
+                    <div class="space-y-6">
+                        <h4 class="text-sm font-bold uppercase tracking-wider text-gray-900">Scored Vendors & Threat Matrices</h4>
+                        
+                        <div id="vendors-container" class="space-y-4">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Placeholder when nothing selected -->
+                <div id="details-placeholder" class="card p-12 rounded-2xl text-center flex flex-col items-center justify-center min-h-[400px]">
+                    <div class="h-16 w-16 rounded-full bg-white border border-black/10 flex items-center justify-center mb-4 text-gray-900">
+                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold font-title text-gray-900">No Assessment Run Selected</h3>
+                    <p class="text-sm text-gray-900 mt-2 max-w-sm">Select an execution from the run history list or upload a response file to visualize quantitative threat analysis.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Global variables
+        const API_URL = "";
+        let runsCache = [];
+
+        // DOM elements
+        const dropzone = document.getElementById("dropzone");
+        const fileInput = document.getElementById("file-input");
+        const uploadStatus = document.getElementById("upload-status");
+        const runsList = document.getElementById("runs-list");
+        const statRuns = document.getElementById("stat-runs");
+        const statVendors = document.getElementById("stat-vendors");
+        const statGaps = document.getElementById("stat-gaps");
+        const runDetailsCard = document.getElementById("run-details-card");
+        const detailsPlaceholder = document.getElementById("details-placeholder");
+        
+        const detailRunId = document.getElementById("detail-run-id");
+        const detailRunDate = document.getElementById("detail-run-date");
+        const detailRunStatus = document.getElementById("detail-run-status");
+        const vendorsContainer = document.getElementById("vendors-container");
+
+        // Init
+        window.addEventListener("DOMContentLoaded", () => {
+            loadRuns();
+            setupUploader();
+        });
+
+        // Setup File Upload
+        function setupUploader() {
+            dropzone.addEventListener("click", () => fileInput.click());
+            
+            dropzone.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropzone.classList.add("border-indigo-500", "bg-indigo-500/10");
+            });
+
+            dropzone.addEventListener("dragleave", () => {
+                dropzone.classList.remove("border-indigo-500", "bg-indigo-500/10");
+            });
+
+            dropzone.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropzone.classList.remove("border-indigo-500", "bg-indigo-500/10");
+                const files = e.dataTransfer.files;
+                if (files.length) handleUpload(files[0]);
+            });
+
+            fileInput.addEventListener("change", () => {
+                if (fileInput.files.length) handleUpload(fileInput.files[0]);
+            });
+        }
+
+        async function handleUpload(file) {
+            uploadStatus.classList.remove("hidden", "text-red-400", "text-gray-600");
+            uploadStatus.classList.add("text-gray-900");
+            uploadStatus.textContent = "Processing scoring pipeline...";
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch(`${API_URL}/assessments/`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error("Scoring pipeline run failed.");
+
+                const data = await response.json();
+                uploadStatus.classList.remove("text-gray-900");
+                uploadStatus.classList.add("text-gray-600");
+                uploadStatus.textContent = `Success! Run ID: ${data.run_id}`;
+                
+                await loadRuns();
+                showRunDetails(data.run_id);
+            } catch (err) {
+                uploadStatus.classList.remove("text-gray-900");
+                uploadStatus.classList.add("text-red-400");
+                uploadStatus.textContent = err.message;
+            }
+        }
+
+        // Load runs list
+        async function loadRuns() {
+            try {
+                const response = await fetch(`${API_URL}/assessments/`);
+                const data = await response.json();
+                runsCache = data;
+                
+                // Update top stats
+                statRuns.textContent = data.length;
+                let totalVendors = 0;
+                let totalGaps = 0;
+                data.forEach(r => {
+                    totalVendors += r.total_vendors_scored;
+                    totalGaps += r.total_gaps_detected;
+                });
+                statVendors.textContent = totalVendors;
+                statGaps.textContent = totalGaps;
+
+                // Render list
+                if (data.length === 0) {
+                    runsList.innerHTML = `<p class="text-sm text-gray-900">No runs executed yet.</p>`;
+                    return;
+                }
+
+                runsList.innerHTML = data.reverse().map(run => {
+                    const dateStr = new Date(run.start_time).toLocaleString();
+                    return `
+                        <div onclick="showRunDetails('${run.run_id}')" class="p-4 rounded-xl border border-black/10 hover:border-gray-300 cursor-pointer transition-all bg-white/40 hover:bg-white/80 group">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm font-bold font-title text-gray-900 group-hover:text-blue-700 transition-colors">${run.run_id}</span>
+                                <span class="text-xs text-gray-900 font-semibold">${run.total_vendors_scored} Scored</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs text-gray-900">
+                                <span>${dateStr}</span>
+                                <span class="text-red-600 font-semibold">${run.total_gaps_detected} Gaps</span>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+            } catch (err) {
+                runsList.innerHTML = `<p class="text-sm text-red-400">Failed to load runs: ${err.message}</p>`;
+            }
+        }
+
+        // Show details of a run
+        async function showRunDetails(runId) {
+            detailsPlaceholder.classList.add("hidden");
+            runDetailsCard.classList.remove("hidden");
+            vendorsContainer.innerHTML = `<p class="text-sm text-gray-900">Fetching run telemetry...</p>`;
+
+            try {
+                const response = await fetch(`${API_URL}/assessments/${runId}`);
+                const data = await response.json();
+
+                detailRunId.textContent = data.metadata.run_id;
+                detailRunDate.textContent = `Executed on: ${new Date(data.metadata.start_time).toLocaleString()}`;
+                detailRunStatus.textContent = data.metadata.status;
+
+                // We group events by vendor_id to reconstruct what happened
+                const scoredEvents = data.events.filter(e => e.event_type === "VENDOR_SCORED");
+                const gapEvents = data.events.filter(e => e.event_type === "GAP_DETECTED");
+                const thresholdEvents = data.events.filter(e => e.event_type === "THRESHOLD_VIOLATION");
+
+                if (scoredEvents.length === 0) {
+                    vendorsContainer.innerHTML = `
+                        <p class="text-sm text-gray-900">No vendors were scored during this run.</p>
+                        ${thresholdEvents.map(e => `
+                            <div class="p-4 rounded-xl bg-red-500/5 border border-red-500/20 text-sm text-red-400">
+                                <strong>POLICY BLOCK:</strong> ${e.message}
+                            </div>
+                        `).join("")}
+                    `;
+                    return;
+                }
+
+                // Render each vendor card
+                vendorsContainer.innerHTML = scoredEvents.map(v => {
+                    const score = v.score.toFixed(1);
+                    const tier = v.classification_tier;
+                    const vendorGaps = gapEvents.filter(g => g.vendor_id === v.vendor_id);
+                    
+                    // Dynamic color mapping (flat corporate style)
+                    let tierColorClass = "text-gray-700 bg-gray-100 border-gray-300";
+                    if (tier === "High") tierColorClass = "text-red-700 bg-red-50 border-red-200";
+                    else if (tier === "Medium") tierColorClass = "text-amber-700 bg-amber-50 border-amber-200";
+
+                    // Dynamic FAIR Calculations
+                    const aro = tier === "High" ? 1.5 : tier === "Medium" ? 0.5 : 0.1;
+                    const sle = 250000.0 * (1.0 + (100.0 - v.score) / 100.0);
+                    const ale = aro * sle;
+                    const rrv = ale * 0.70;
+
+                    // MITRE mappings
+                    let mitreList = "No failed controls. Zero threat mappings.";
+                    if (tier === "High") {
+                        mitreList = `
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="px-2.5 py-1 rounded bg-red-50 border border-red-200 text-[10px] font-bold text-red-700" title="Valid Accounts Tactic">T1078 (Valid Accounts)</span>
+                                <span class="px-2.5 py-1 rounded bg-red-50 border border-red-200 text-[10px] font-bold text-red-700" title="Data Encrypted for Impact">T1486 (Impact/Ransom)</span>
+                            </div>
+                        `;
+                    } else if (tier === "Medium") {
+                        mitreList = `
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="px-2.5 py-1 rounded bg-amber-50 border border-amber-200 text-[10px] font-bold text-amber-700" title="Exfiltration Tactic">T1041 (Exfiltration Over C2)</span>
+                            </div>
+                        `;
+                    }
+
+                    return `
+                        <div class="p-6 rounded-2xl border border-black/10 bg-white/30">
+                            <!-- Vendor Header -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/10 pb-4 mb-4">
+                                <div>
+                                    <h5 class="text-base font-bold font-title text-gray-900">${v.message.split("scored.")[0].replace("Vendor", "").trim()}</h5>
+                                    <p class="text-xs text-gray-900">ID: ${v.vendor_id}</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold ${tierColorClass} border">${tier} Risk</span>
+                                    <div class="text-2xl font-black font-title text-gray-900">${score}</div>
+                                </div>
+                            </div>
+
+                            <!-- Details Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                
+                                <!-- FAIR Loss Estimates -->
+                                <div>
+                                    <h6 class="text-xs font-bold uppercase tracking-wider text-gray-900 mb-2">FAIR Loss Quantifications</h6>
+                                    <div class="space-y-2 text-xs">
+                                        <div class="flex justify-between py-1 border-b border-black/10/50">
+                                            <span class="text-gray-900">Annual Occurrence (ARO)</span>
+                                            <span class="font-semibold text-gray-900">${aro} / year</span>
+                                        </div>
+                                        <div class="flex justify-between py-1 border-b border-black/10/50">
+                                            <span class="text-gray-900">Single Loss (SLE)</span>
+                                            <span class="font-semibold text-gray-900">$${sle.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                        <div class="flex justify-between py-1 border-b border-black/10/50">
+                                            <span class="text-gray-900">Annual Loss (ALE)</span>
+                                            <span class="font-bold text-blue-700">$${ale.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MITRE Threat TTPs -->
+                                <div>
+                                    <h6 class="text-xs font-bold uppercase tracking-wider text-gray-900 mb-2">MITRE ATT&CK Mappings</h6>
+                                    <p class="text-xs text-gray-900">Exploitable tactics mapped to control gaps:</p>
+                                    ${mitreList}
+                                </div>
+
+                            </div>
+
+                            <!-- PDF Report Download Button -->
+                            <div class="mt-4 pt-4 border-t border-black/10/60 flex items-center justify-between">
+                                <span class="text-xs text-red-600 font-semibold">${vendorGaps.length} control gaps logged</span>
+                                <a href="${API_URL}/assessments/${runId}/vendors/${v.vendor_id}/report" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors">
+                                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Get PDF Report
+                                </a>
+                            </div>
+
+                        </div>
+                    `;
+                }).join("");
+
+            } catch (err) {
+                vendorsContainer.innerHTML = `<p class="text-sm text-red-400">Failed to render run telemetry: ${err.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

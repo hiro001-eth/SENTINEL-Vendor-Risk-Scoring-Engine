@@ -1,0 +1,42 @@
+version: "1.0.0"
+categories:
+  - category_id: "CAT_SOC2_SECURITY"
+    category_name: "SOC 2 Security (Common Criteria)"
+    category_weight: 0.50
+    questions:
+      - question_id: "SOC2_SEC_01"
+        question_text: "Are logical access controls enforced (firewalls, 2FA, IAM)?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+      - question_id: "SOC2_SEC_02"
+        question_text: "Is vulnerability scanning and penetration testing performed regularly?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_SOC2_AVAILABILITY"
+    category_name: "SOC 2 Availability"
+    category_weight: 0.25
+    questions:
+      - question_id: "SOC2_AV_01"
+        question_text: "Are systems backed up daily with off-site replication?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_SOC2_CONFIDENTIALITY"
+    category_name: "SOC 2 Confidentiality"
+    category_weight: 0.25
+    questions:
+      - question_id: "SOC2_CONF_01"
+        question_text: "Is customer data encrypted at rest and in transit?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true

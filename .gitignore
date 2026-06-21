@@ -1,0 +1,19 @@
+# Git Ignore for Python Project
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.env
+output/
+state/weight_version.json
+state/runs.json
+state/audit/
+venv/
+.venv/

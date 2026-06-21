@@ -1,0 +1,64 @@
+version: "1.0.0"
+categories:
+  - category_id: "CAT_NIST_IDENTIFY"
+    category_name: "NIST CSF 2.0 Identify (ID)"
+    category_weight: 0.20
+    questions:
+      - question_id: "NIST_ID_01"
+        question_text: "Are security roles and responsibilities defined and documented?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: false
+  - category_id: "CAT_NIST_PROTECT"
+    category_name: "NIST CSF 2.0 Protect (PR)"
+    category_weight: 0.30
+    questions:
+      - question_id: "NIST_PR_01"
+        question_text: "Are access permissions managed following the principle of least privilege?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+      - question_id: "NIST_PR_02"
+        question_text: "Are data backups maintained and regularly tested for restoration?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_NIST_DETECT"
+    category_name: "NIST CSF 2.0 Detect (DE)"
+    category_weight: 0.25
+    questions:
+      - question_id: "NIST_DE_01"
+        question_text: "Are networks and systems monitored to detect anomalies and events?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_NIST_RESPOND"
+    category_name: "NIST CSF 2.0 Respond (RS)"
+    category_weight: 0.15
+    questions:
+      - question_id: "NIST_RS_01"
+        question_text: "Are detected security incidents analyzed and responded to?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_NIST_RECOVER"
+    category_name: "NIST CSF 2.0 Recover (RC)"
+    category_weight: 0.10
+    questions:
+      - question_id: "NIST_RC_01"
+        question_text: "Are recovery plans executed and updated based on lessons learned?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: false

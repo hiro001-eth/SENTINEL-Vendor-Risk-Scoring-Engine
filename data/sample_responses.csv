@@ -1,0 +1,11 @@
+vendor_id,vendor_name,assessment_date,responded_by,Q_DH_01,Q_AC_01,Q_IR_01,Q_BC_01,Q_ENC_01
+V-1001,Amazon Web Services,2026-06-21,aws-compliance@amazon.com,yes,yes,yes,yes,yes
+V-1002,Datadog Inc.,2026-06-21,security@datadoghq.com,yes,yes,yes,yes,yes
+V-1003,Stripe,2026-06-21,grc@stripe.com,yes,yes,yes,yes,yes
+V-1004,StartupCloud,2026-06-21,cto@startupcloud.io,partial,partial,partial,partial,yes
+V-1005,Legacy Vendor Solutions,2026-06-21,admin@legacyvendor.com,no,no,unsure,no,no
+V-1006,Snowflake,2026-06-21,compliance@snowflake.com,yes,yes,yes,yes,yes
+V-1007,Acme Analytics,2026-06-21,bob@acmeanalytics.io,yes,partial,yes,partial,partial
+V-1008,Global Payment Gateway,2026-06-21,sec-ops@gpg.com,yes,yes,yes,yes,yes
+V-1009,CheapHosting LLC,2026-06-21,support@cheaphosting.net,partial,no,no,partial,partial
+V-1010,Salesforce,2026-06-21,trust@salesforce.com,yes,yes,yes,yes,yes

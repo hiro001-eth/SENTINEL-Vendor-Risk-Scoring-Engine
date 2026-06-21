@@ -1,0 +1,53 @@
+version: "1.0.0"
+categories:
+  - category_id: "CAT_PCI_NETWORK"
+    category_name: "PCI-DSS v4.0 Network Security (Req 1-2)"
+    category_weight: 0.25
+    questions:
+      - question_id: "PCI_NET_01"
+        question_text: "Are network security controls (firewalls) maintained to protect cardholder data?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_PCI_DATA_PROT"
+    category_name: "PCI-DSS v4.0 Data Protection (Req 3-4)"
+    category_weight: 0.35
+    questions:
+      - question_id: "PCI_DAT_01"
+        question_text: "Is stored cardholder data kept to a minimum and encrypted?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+      - question_id: "PCI_DAT_02"
+        question_text: "Is cardholder data encrypted during transmission across public networks?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_PCI_VULN_MGMT"
+    category_name: "PCI-DSS v4.0 Vulnerability Management (Req 5-6)"
+    category_weight: 0.20
+    questions:
+      - question_id: "PCI_VUL_01"
+        question_text: "Are anti-malware systems deployed and actively updated?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: false
+  - category_id: "CAT_PCI_ACCESS_CTRL"
+    category_name: "PCI-DSS v4.0 Access Control & Monitoring (Req 7-10)"
+    category_weight: 0.20
+    questions:
+      - question_id: "PCI_ACC_01"
+        question_text: "Is system component access limited to only those with a business need?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true

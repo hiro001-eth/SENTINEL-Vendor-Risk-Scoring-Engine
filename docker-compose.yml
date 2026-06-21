@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  sentinel-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: sentinel-grc:1.1.0
+    container_name: sentinel_grc_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist output, audit logs, and PDFs across container restarts
+      - ./output:/sentinel/output
+      # Mount your .env for secrets (never bake secrets into the image)
+      - ./.env:/sentinel/.env:ro
+    env_file:
+      - .env
+    environment:
+      - OUTPUT_DIR=/sentinel/output
+      - QUESTIONNAIRE_SCHEMA_PATH=/sentinel/src/vendor_risk_engine/rules/questionnaire_schema.yaml
+      - WEIGHT_CONFIG_PATH=/sentinel/src/vendor_risk_engine/rules/weight_config.yaml
+      - THRESHOLD_CONFIG_PATH=/sentinel/src/vendor_risk_engine/rules/threshold_config.yaml
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+    networks:
+      - sentinel-net
+
+  # Optional: expose a local Nginx reverse proxy for production deployments
+  # sentinel-proxy:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  #   depends_on:
+  #     - sentinel-api
+  #   networks:
+  #     - sentinel-net
+
+networks:
+  sentinel-net:
+    driver: bridge

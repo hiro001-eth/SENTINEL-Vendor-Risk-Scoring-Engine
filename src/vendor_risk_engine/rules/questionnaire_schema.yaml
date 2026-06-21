@@ -1,0 +1,57 @@
+version: "1.0.0"
+categories:
+  - category_id: "CAT_DATA_HANDLING"
+    category_name: "Data Handling & Privacy"
+    category_weight: 0.25
+    questions:
+      - question_id: "Q_DH_01"
+        question_text: "Does the vendor process PII/PHI data?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_ACCESS_CONTROLS"
+    category_name: "Access Controls"
+    category_weight: 0.25
+    questions:
+      - question_id: "Q_AC_01"
+        question_text: "Is MFA enforced for all external access?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_INCIDENT_RESPONSE"
+    category_name: "Incident Response"
+    category_weight: 0.20
+    questions:
+      - question_id: "Q_IR_01"
+        question_text: "Does the vendor have a formal, tested Incident Response Plan?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: false
+  - category_id: "CAT_BUSINESS_CONTINUITY"
+    category_name: "Business Continuity"
+    category_weight: 0.15
+    questions:
+      - question_id: "Q_BC_01"
+        question_text: "Are disaster recovery exercises conducted annually?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: false
+        is_applicable_default: true
+        evidence_required: true
+  - category_id: "CAT_ENCRYPTION"
+    category_name: "Encryption"
+    category_weight: 0.15
+    questions:
+      - question_id: "Q_ENC_01"
+        question_text: "Is data encrypted at rest using industry standard algorithms (e.g., AES-256)?"
+        response_type: "yes"
+        weight: 1.0
+        is_critical: true
+        is_applicable_default: true
+        evidence_required: true

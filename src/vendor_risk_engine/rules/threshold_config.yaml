@@ -1,0 +1,15 @@
+version: "1.0.0"
+boundary_handling: "inclusive_exclusive"
+thresholds:
+  Low:
+    min_score_inclusive: 70.0
+    max_score_inclusive: 100.0
+    description: "Acceptable risk level with standard monitoring"
+  Medium:
+    min_score_inclusive: 40.0
+    max_score_inclusive: 69.9999
+    description: "Elevated risk requiring enhanced oversight or remediation plan"
+  High:
+    min_score_inclusive: 0.0
+    max_score_inclusive: 39.9999
+    description: "Unacceptable risk requiring immediate remediation or contract termination consideration"
