@@ -196,7 +196,7 @@ Every output row carries three SHA-256 hashes:
 
 If a regulator asks *"prove this score was not manually modified"*, SENTINEL answers that question with mathematical certainty.
 
-### 📊 Deterministic Multi-Domain Scoring
+###  Deterministic Multi-Domain Scoring
 Scoring across 5 core domains (expandable via YAML):
 - **Data Handling & Privacy** (25%)
 - **Access Controls** (25%)
@@ -213,10 +213,10 @@ SENTINEL fetches real-time intelligence from:
 
 Blending formula: `(0.7 × internal_score) + (0.3 × external_avg)`. Fresh signals only (configurable TTL, default 168h). Stale data is quarantined, not silently used.
 
-### 🚨 Category Floor Enforcement
+###  Category Floor Enforcement
 A vendor that scores 95% overall but 10% on Encryption **cannot** be classified as Low Risk. The category floor (default 30.0) caps the total score, preventing a strong aggregate score from masking a catastrophic domain failure. This is the feature missing from every commercial tool.
 
-### 📋 Automated PDF/A Reports
+### Automated PDF/A Reports
 Per-vendor PDF reports generated via ReportLab, containing:
 - Classification tier and total score
 - Gap count and assessment date
@@ -229,7 +229,7 @@ Production GRC teams need to update scoring weights without corrupting live runs
 - Atomic read-modify-write on weight state
 - One-command rollback to previous weight configuration
 
-### 🔁 Streaming Ingestion (Memory-Bounded)
+###  Streaming Ingestion (Memory-Bounded)
 Pandas chunked reader ensures SENTINEL can process a 50,000-vendor CSV on a machine with 4GB RAM without OOM. Chunk size is configurable via `BATCH_SIZE` env variable.
 
 ### Full Exception Hierarchy
@@ -419,7 +419,7 @@ Auto-generated per-vendor PDF with classification tier, score, gap summary, and 
 | **Medium** | 40.0 – 69.99 | Elevated risk | Enhanced oversight, 30-day remediation plan |
 | **High** | 0.0 – 39.99 | Unacceptable risk | Immediate escalation, contract review |
 
-> ⚠️ **Category Floor Active:** Even if a vendor scores 95% overall, a score below 30.0 in any single domain triggers automatic High classification. This prevents score averaging from hiding catastrophic control failures.
+>  **Category Floor Active:** Even if a vendor scores 95% overall, a score below 30.0 in any single domain triggers automatic High classification. This prevents score averaging from hiding catastrophic control failures.
 
 ---
 
