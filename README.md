@@ -11,7 +11,7 @@
  ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝
 ```
 
-### **Vendor Risk Scoring Engine — v1.2.0 PRODUCTION**
+### **Vendor Risk Scoring Engine  v1.2.0 PRODUCTION**
 #### *Deterministic · Audit-Grade · Open Source · Enterprise-Ready*
 
 <br/>
