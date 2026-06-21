@@ -27,11 +27,11 @@
 
 <br/>
 
-> ### 🛡️ *"The only open-source GRC engine that proves every score — mathematically, cryptographically, and in court."*
+> ### *"The only open-source GRC engine that proves every score — mathematically, cryptographically, and in court."*
 
 <br/>
 
-| ⚡ **Zero Black Box** | 🔐 **SHA-256 Lineage** | 💰 **$0 License Cost** | 🌐 **REST API Ready** |
+| **Zero Black Box** | **SHA-256 Lineage** | **$0 License Cost** | **REST API Ready** |
 |:---:|:---:|:---:|:---:|
 | Every score is deterministic YAML math | Cryptographic proof of every weight, question & response | Replace $200K/yr tools with a `pip install` | Full FastAPI wrapper, upload CSV, get JSON + PDF |
 
@@ -52,7 +52,7 @@
 
 ---
 
-## 🖥️ Platform Interface
+## Platform Interface
 
 Take a look at the robust, enterprise-grade capabilities of the SENTINEL GRC Engine:
 
@@ -188,7 +188,7 @@ CSV / Excel Input
 
 ## Features
 
-### 🔐 Cryptographic Score Lineage
+### Cryptographic Score Lineage
 Every output row carries three SHA-256 hashes:
 - `weight_config_hash` — proves which scoring model was active
 - `questionnaire_version_hash` — proves which question set was used
@@ -206,7 +206,7 @@ Scoring across 5 core domains (expandable via YAML):
 
 Each answer maps through a strict `RESPONSE_SCORE_MAP`: `yes=1.0`, `partial=0.5`, `no=0.0`, `unsure=0.0`, `na=None`. No ambiguity. No interpretation drift between analysts.
 
-### 🌐 Dual-Source External Signal Blending
+### Dual-Source External Signal Blending
 SENTINEL fetches real-time intelligence from:
 - **BitSight** — normalizes 250–900 security rating to 0–100
 - **HaveIBeenPwned** — checks for breach exposure with rate limiting
@@ -223,7 +223,7 @@ Per-vendor PDF reports generated via ReportLab, containing:
 - Score data hash (first 16 chars displayed for human verification)
 - Ready for PDF/A compliance archiving
 
-### 🔄 Atomic Weight Version Management
+### Atomic Weight Version Management
 Production GRC teams need to update scoring weights without corrupting live runs. SENTINEL's `WeightVersionManager` uses:
 - `fcntl.flock` for exclusive file locking (safe for concurrent processes)
 - Atomic read-modify-write on weight state
@@ -232,7 +232,7 @@ Production GRC teams need to update scoring weights without corrupting live runs
 ### 🔁 Streaming Ingestion (Memory-Bounded)
 Pandas chunked reader ensures SENTINEL can process a 50,000-vendor CSV on a machine with 4GB RAM without OOM. Chunk size is configurable via `BATCH_SIZE` env variable.
 
-### ⚡ Full Exception Hierarchy
+### Full Exception Hierarchy
 43 named exception classes across 6 domains — no `except Exception: pass` anywhere. Every failure is traceable to the exact pipeline stage, assessment run ID, and correlation ID.
 
 ---
