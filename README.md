@@ -27,7 +27,7 @@
 
 <br/>
 
-> ### *"The only open-source GRC engine that proves every score — mathematically, cryptographically, and in court."*
+> ### *"The only open-source GRC engine that proves every score  mathematically, cryptographically, and in court."*
 
 <br/>
 
