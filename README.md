@@ -11,7 +11,7 @@
  ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝
 ```
 
-### **Vendor Risk Scoring Engine — v1.1.0 PRODUCTION**
+### **Vendor Risk Scoring Engine — v1.2.0 PRODUCTION**
 #### *Deterministic · Audit-Grade · Open Source · Enterprise-Ready*
 
 <br/>
@@ -102,7 +102,7 @@ Take a look at the robust, enterprise-grade capabilities of the SENTINEL GRC Eng
 
 ## Why SENTINEL? Not OneTrust. Not Archer. Not Vanta.
 
-| Capability | OneTrust | Archer | Vanta | Panorays | **SENTINEL v1.1.0** |
+| Capability | OneTrust | Archer | Vanta | Panorays | **SENTINEL v1.2.0** |
 |:---|:---:|:---:|:---:|:---:|:---:|
 | Deterministic scoring (no black box) | ❌ | ❌ | ❌ | ❌ | ✅ |
 | Cryptographic score lineage (SHA-256) | ❌ | ❌ | ❌ | ❌ | ✅ |
